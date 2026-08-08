@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CDC Single Table Visual Lab</title>
+<style>
+:root{
+  --bg:#f4f6f9;--card:#fff;--ink:#172033;--muted:#667085;--line:#dfe4ea;
+  --dark:#101828;--blue:#2563eb;--blue-soft:#eff6ff;--green:#16a34a;
+  --green-soft:#ecfdf3;--orange:#ea580c;--orange-soft:#fff7ed;--purple:#7c3aed;
+  --purple-soft:#f5f3ff;--red:#dc2626
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.header{background:var(--dark);color:white;padding:18px 28px}
+.header-inner{max-width:1450px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:grid;place-items:center;font-weight:900}
+.brand h1{margin:0;font-size:18px}.brand p{margin:3px 0 0;color:#98a2b3;font-size:12px}
+.wrap{max-width:1450px;margin:auto;padding:24px}
+.hero h2{margin:0 0 6px;font-size:28px;letter-spacing:-.02em}.hero p{margin:0 0 18px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:0 8px 25px rgba(16,24,40,.06)}
+.workbench{display:grid;grid-template-columns:270px minmax(320px,1fr) minmax(430px,1.35fr);gap:12px;align-items:start}
+.controls{padding:16px;position:sticky;top:16px}
+.title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.title h3{font-size:14px;margin:0}.step{background:var(--dark);color:white;border-radius:7px;width:24px;height:24px;display:grid;place-items:center;font-size:11px;font-weight:900}
+.field{margin-bottom:12px}.field label{display:block;text-transform:uppercase;letter-spacing:.06em;font-size:9px;color:var(--muted);font-weight:900;margin-bottom:5px}
+select,input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);outline:none}
+select:focus,input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px var(--blue-soft)}
+.btn{width:100%;padding:10px;border-radius:9px;font-weight:900;border:0}.primary{background:var(--blue);color:white}.secondary{margin-top:7px;background:white;border:1px solid var(--line)}
+.small{font-size:10px;color:var(--muted);line-height:1.45;margin-top:11px}
+.event{padding:16px}
+.event-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.event-head h3{font-size:14px;margin:0}
+.badge{font-size:9px;font-weight:900;padding:5px 8px;border-radius:99px;background:var(--blue-soft);color:#1d4ed8}
+.flow{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.flow-grid{display:grid;grid-template-columns:1fr 55px 1fr}
+.box{padding:18px}.before{background:#f8fafc}.after{background:var(--green-soft)}.arrow{display:grid;place-items:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font-size:23px;color:var(--blue)}
+.label{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:900;margin-bottom:7px}.value{font-size:20px;font-weight:900;word-break:break-word}.sub{font-size:10px;color:var(--muted);margin-top:4px}
+.event-meta{border-top:1px solid var(--line);padding:12px;text-align:center}.event-meta strong{font-size:12px}.event-meta div{font-size:10px;color:var(--muted);margin-top:3px}
+.explain{margin-top:10px;padding:11px;border-radius:9px;background:var(--purple-soft);color:#5b21b6;font-size:11px;line-height:1.45}
+.timeline{margin-top:12px;padding:15px}.timeline h3{font-size:14px;margin:0 0 12px}.timeline-track{display:flex;overflow-x:auto;padding-bottom:4px}.time-item{min-width:145px;position:relative}.time-item:not(:last-child):after{content:"";position:absolute;top:8px;left:17px;right:0;height:2px;background:#d0d5dd}.dot{position:relative;z-index:2;width:17px;height:17px;border-radius:50%;background:#d0d5dd;border:4px solid white;box-shadow:0 0 0 1px #d0d5dd}.time-item.current .dot{background:var(--blue)}.time-item strong{display:block;margin-top:8px;font-size:10px}.time-item span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.result{padding:16px}.result-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:11px}.result-head h3{font-size:15px;margin:0}.result-head p{font-size:10px;color:var(--muted);margin:4px 0 0}.strategy{width:155px}
+.table-wrap{border:1px solid var(--line);border-radius:11px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:540px}th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);font-size:10px;white-space:nowrap}th{background:#f8fafc;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.05em}tr:last-child td{border-bottom:0}.highlight{background:var(--orange-soft)!important;box-shadow:inset 3px 0 var(--orange)}.active-row{background:var(--green-soft)}.inactive{background:#f8fafc;color:#667085}
+.result-note{margin-top:10px;padding:10px;border-radius:9px;background:#f8fafc;font-size:10px;color:var(--muted);line-height:1.5}
+.log{margin-top:12px;padding:15px}.log h3{margin:0 0 9px;font-size:14px}.events{display:flex;gap:7px;flex-wrap:wrap}.event-chip{font-size:9px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:white}.event-chip b{color:var(--blue)}
+.sample-preview{padding:16px;margin-bottom:12px}
+.sample-preview-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:12px}
+.sample-preview-head h3{margin:0;font-size:15px}.sample-preview-head p{margin:4px 0 0;font-size:10px;color:var(--muted)}
+.sample-selector{width:190px}.sample-selector label{display:block;text-transform:uppercase;letter-spacing:.06em;font-size:9px;color:var(--muted);font-weight:900;margin-bottom:5px}
+.sample-hint{font-size:10px;color:var(--muted);margin-top:9px}
+@media(max-width:1150px){.workbench{grid-template-columns:250px 1fr}.result{grid-column:1/-1}.controls{position:static}}
+@media(max-width:760px){.sample-preview-head{align-items:stretch;flex-direction:column}.sample-selector{width:100%}.workbench{grid-template-columns:1fr}.flow-grid{grid-template-columns:1fr}.arrow{padding:10px;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.wrap{padding:15px}.strategy{width:130px}}
+@media(max-width:760px){.workbench{grid-template-columns:1fr}.flow-grid{grid-template-columns:1fr}.arrow{padding:10px;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.wrap{padding:15px}.strategy{width:130px}}
+</style>
+</head>
+<body>
+<header class="header">
+ <div class="header-inner">
+  <div class="brand"><div class="logo">CDC</div><div><h1>CDC Single Table Visual Lab</h1><p>Change one column → choose when it happened → visualize the SCD result</p></div></div>
+ </div>
+</header>
+
+<main class="wrap">
+ <section class="hero">
+  <h2>Single-table CDC playground</h2>
+  <p>Start with a real sample table, choose a row and column, enter the new value, choose the event date/time, and see exactly how SCD1, SCD2, or SCD3 stores the change.</p>
+ </section>
+
+ <section class="card sample-preview">
+  <div class="sample-preview-head">
+   <div>
+    <h3>Sample data</h3>
+    <p id="sampleDescription">Customer data — choose a table to explore.</p>
+   </div>
+   <div class="sample-selector">
+    <label>Choose a table</label>
+    <select id="sampleDataset">
+     <option value="customer">Customer</option>
+     <option value="employee">Employee</option>
+     <option value="student">Student</option>
+    </select>
+   </div>
+  </div>
+  <div class="table-wrap"><table id="sampleTable">
+   <thead><tr><th>id</th><th>name</th><th>address</th><th>phone</th></tr></thead>
+   <tbody>
+    <tr><td>C001</td><td>Arun Kumar</td><td>Chennai</td><td>9876543210</td></tr>
+    <tr><td>C002</td><td>Priya Sharma</td><td>Bangalore</td><td>9876543211</td></tr>
+    <tr><td>C003</td><td>Ravi Patel</td><td>Mumbai</td><td>9876543212</td></tr>
+   </tbody>
+  </table></div>
+  <div class="sample-hint">This is the starting dataset. The CDC controls below use this same table, so every change is visible in the data.</div>
+ </section>
+
+ <div class="workbench">
+  <aside class="card controls">
+   <div class="title"><h3>1 · Create the change</h3><span class="step">1</span></div>
+
+   <div class="field">
+    <label>Dataset</label>
+    <select id="dataset" onchange="resetLab()">
+     <option value="customer">Customer</option>
+     <option value="employee">Employee</option>
+     <option value="student">Student</option>
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Operation</label>
+    <select id="operation" onchange="updateEvent()">
+     <option value="UPDATE">UPDATE</option>
+     <option value="INSERT">INSERT</option>
+     <option value="DELETE">DELETE</option>
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Row</label>
+    <select id="row" onchange="updateEvent()"></select>
+   </div>
+
+   <div class="field">
+    <label>Column</label>
+    <select id="column" onchange="updateEvent()"></select>
+   </div>
+
+   <div class="field" id="newValueWrap">
+    <label>New value</label>
+    <input id="newValue" value="Hyderabad" oninput="updateEvent()">
+   </div>
+
+   <div class="field">
+    <label>Change date & time</label>
+    <input id="eventTime" type="datetime-local" onchange="updateEvent()">
+   </div>
+
+   <button class="btn primary" onclick="applyChange()">Apply CDC Change</button>
+   <button class="btn secondary" onclick="resetLab()">Reset table</button>
+
+   <div class="small">
+    The date/time defaults automatically to the current time. You can change it before applying every event, so you can build a real history such as:
+    <br><br>
+    <b>Jan 05 → Feb 17 → Apr 03</b>
+   </div>
+  </aside>
+
+  <section>
+   <div class="card event">
+    <div class="event-head"><h3>2 · CDC event visualization</h3><span class="badge" id="eventBadge">UPDATE</span></div>
+
+    <div class="flow">
+     <div class="flow-grid">
+      <div class="box before">
+       <div class="label">Before</div>
+       <div class="value" id="beforeValue">Chennai</div>
+       <div class="sub" id="beforeSub">C001 · address</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="box after">
+       <div class="label">After</div>
+       <div class="value" id="afterValue">Hyderabad</div>
+       <div class="sub">new source value</div>
+      </div>
+     </div>
+     <div class="event-meta">
+      <strong id="eventSentence">UPDATE C001.address</strong>
+      <div id="eventWhen"></div>
+     </div>
+    </div>
+
+    <div class="explain" id="eventExplain"></div>
+
+    <div class="card timeline">
+     <h3>Record timeline</h3>
+     <div class="timeline-track" id="timeline"></div>
+    </div>
+
+    <div class="card log">
+     <h3>CDC event history</h3>
+     <div class="events" id="events"></div>
+    </div>
+   </div>
+  </section>
+
+  <section class="card result">
+   <div class="result-head">
+    <div>
+     <h3 id="resultTitle">3 · SCD Type 1 result</h3>
+     <p id="resultDesc">Current state only — the old value is overwritten.</p>
+    </div>
+    <select class="strategy" id="strategy" onchange="renderResult()">
+     <option value="SCD1">SCD Type 1</option>
+     <option value="SCD2">SCD Type 2</option>
+     <option value="SCD3">SCD Type 3</option>
+    </select>
+   </div>
+
+   <div class="table-wrap"><table id="resultTable"></table></div>
+   <div class="result-note" id="resultNote"></div>
+  </section>
+ </div>
+</main>
+
+<script>
+const DATA = {
+  customer:{
+    key:"id", cols:["id","name","address","phone"], edit:["name","address","phone"],
+    rows:[
+      {id:"C001",name:"Arun Kumar",address:"Chennai",phone:"9876543210"},
+      {id:"C002",name:"Priya Sharma",address:"Bangalore",phone:"9876543211"},
+      {id:"C003",name:"Ravi Patel",address:"Mumbai",phone:"9876543212"}
+    ]
+  },
+  employee:{
+    key:"id", cols:["id","name","department","salary"], edit:["name","department","salary"],
+    rows:[
+      {id:"E101",name:"Anita Rao",department:"Engineering",salary:"85000"},
+      {id:"E102",name:"Vikram Shah",department:"Finance",salary:"72000"},
+      {id:"E103",name:"Meera Iyer",department:"HR",salary:"68000"}
+    ]
+  },
+  student:{
+    key:"id", cols:["id","name","subject","score"], edit:["name","subject","score"],
+    rows:[
+      {id:"S001",name:"Kiran",subject:"Math",score:"78"},
+      {id:"S002",name:"Nisha",subject:"Physics",score:"84"},
+      {id:"S003",name:"Rahul",subject:"Math",score:"69"}
+    ]
+  }
+};
+
+let current=[];
+let scd2=[];
+let scd3=[];
+let history=[];
+
+const $ = id => document.getElementById(id);
+const clone = x => JSON.parse(JSON.stringify(x));
+
+function dataset(){ return DATA[$("dataset").value]; }
+
+function nowLocal(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function fmt(v){
+  if(!v) return "";
+  const d=new Date(v);
+  return isNaN(d) ? v : d.toLocaleString([],{
+    year:"numeric",month:"short",day:"2-digit",
+    hour:"2-digit",minute:"2-digit"
+  });
+}
+
+function selectedRow(){
+  const d=dataset();
+  return current.find(r=>r[d.key]===$("row").value);
+}
+
+function renderSample(){
+  const key=$("sampleDataset").value;
+  const d=DATA[key];
+  const descriptions={
+    customer:"Customer master data — try changing address or phone.",
+    employee:"Employee dimension data — try changing department or salary.",
+    student:"Student data — try correcting a score or subject."
+  };
+  $("sampleDescription").textContent=descriptions[key];
+
+  $("sampleTable").innerHTML=`
+    <thead><tr>${d.cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
+    <tbody>
+      ${d.rows.map(r=>`<tr>${d.cols.map(c=>`<td>${r[c]}</td>`).join("")}</tr>`).join("")}
+    </tbody>`;
+}
+
+function loadDataset(){
+  const key=$("dataset").value;
+  $("sampleDataset").value=key;
+
+  const d=DATA[key];
+  current=clone(d.rows);
+  scd2=current.map(r=>({
+    ...clone(r),
+    eff_start_date:"Initial",
+    eff_end_date:null,
+    is_active:true
+  }));
+  scd3=current.map(r=>({...clone(r),previous:{}}));
+  history=[];
+
+  $("eventTime").value=nowLocal();
+
+  $("row").innerHTML=d.rows.map(r=>
+    `<option value="${r[d.key]}">${r[d.key]} · ${r.name}</option>`
+  ).join("");
+
+  $("column").innerHTML=d.edit.map(c=>
+    `<option value="${c}">${c}</option>`
+  ).join("");
+
+  const defaults={
+    customer:"address",
+    employee:"salary",
+    student:"score"
+  };
+  $("column").value=defaults[key];
+
+  setSuggestedValue();
+  renderSample();
+  renderAll();
+}
+
+function setSuggestedValue(){
+  const c=$("column").value;
+  const examples={
+    address:"Hyderabad",
+    phone:"9000000000",
+    name:"New Name",
+    department:"Analytics",
+    salary:"92000",
+    subject:"Physics",
+    score:"91"
+  };
+  $("newValue").value=examples[c] || "";
+}
+
+function previewEvent(){
+  const r=selectedRow();
+  if(!r)return;
+
+  const op=$("operation").value;
+  const c=$("column").value;
+  const value=$("newValue").value;
+  const time=$("eventTime").value;
+
+  $("eventBadge").textContent=op;
+  $("beforeValue").textContent=op==="INSERT"?"—":(r[c]??"NULL");
+  $("afterValue").textContent=op==="DELETE"?"DELETED":value;
+  $("beforeSub").textContent=`${r[dataset().key]} · ${c}`;
+
+  $("eventSentence").textContent =
+    op==="UPDATE" ? `UPDATE ${r[dataset().key]}.${c}` :
+    op==="DELETE" ? `DELETE ${r[dataset().key]}` :
+    `INSERT ${r[dataset().key]}`;
+
+  $("eventWhen").textContent=time
+    ? `Event time · ${fmt(time)}`
+    : "Choose an event date/time";
+
+  $("newValueWrap").style.display=op==="DELETE"?"none":"block";
+
+  $("eventExplain").innerHTML =
+    op==="UPDATE"
+    ? `<b>SCD1:</b> overwrite the old value · <b>SCD2:</b> expire the old row and create a new version · <b>SCD3:</b> keep the previous value in a history column.`
+    : `<b>${op}</b> is a CDC event. Choose a date/time and apply it to see how the selected SCD strategy stores it.`;
+}
+
+function applyChange(){
+  const r=selectedRow();
+  if(!r)return alert("Please select a row.");
+
+  const d=dataset();
+  const op=$("operation").value;
+  const c=$("column").value;
+  const value=$("newValue").value;
+  const time=$("eventTime").value || nowLocal();
+  const id=r[d.key];
+  const old=r[c];
+
+  if(op==="UPDATE"){
+    r[c]=value;
+
+    const active=scd2.find(x=>x[d.key]===id && x.is_active);
+    if(active){
+      active.is_active=false;
+      active.eff_end_date=time;
+
+      const next=clone(active);
+      next[c]=value;
+      next.eff_start_date=time;
+      next.eff_end_date=null;
+      next.is_active=true;
+      scd2.push(next);
+    }
+
+    const s3=scd3.find(x=>x[d.key]===id);
+    if(s3){
+      s3.previous[c]=s3[c];
+      s3[c]=value;
+    }
+
+    history.push({op,id,c,old,value,time});
+  }
+
+  if(op==="DELETE"){
+    current=current.filter(x=>x[d.key]!==id);
+
+    scd2.filter(x=>x[d.key]===id && x.is_active)
+      .forEach(x=>{
+        x.is_active=false;
+        x.eff_end_date=time;
+      });
+
+    scd3=scd3.filter(x=>x[d.key]!==id);
+    history.push({op,id,c:null,old,value:null,time});
+  }
+
+  if(op==="INSERT"){
+    const newId=prompt("Enter the new row ID:",`${id}-NEW`);
+    if(!newId)return;
+
+    const newRow=clone(r);
+    newRow[d.key]=newId;
+    newRow[c]=value;
+    current.push(newRow);
+
+    scd2.push({
+      ...clone(newRow),
+      eff_start_date:time,
+      eff_end_date:null,
+      is_active:true
+    });
+
+    scd3.push({...clone(newRow),previous:{}});
+    history.push({op,id:newId,c,old:null,value,time});
+  }
+
+  $("eventTime").value=nowLocal();
+  renderSample();
+  renderAll();
+}
+
+function renderResult(){
+  const type=$("strategy").value;
+  const d=dataset();
+  const last=history.length ? history[history.length-1].id : null;
+
+  $("resultTitle").textContent =
+    type==="SCD1" ? "3 · SCD Type 1 result" :
+    type==="SCD2" ? "3 · SCD Type 2 result" :
+    "3 · SCD Type 3 result";
+
+  $("resultDesc").textContent =
+    type==="SCD1" ? "Current state only — the old value is overwritten." :
+    type==="SCD2" ? "Every change creates a historical version with effective dates." :
+    "Current value plus the immediately previous value.";
+
+  let rows,cols;
+
+  if(type==="SCD1"){
+    rows=current;
+    cols=d.cols;
+    $("resultNote").innerHTML=
+      "<b>SCD1:</b> the old value is overwritten. There is no historical row.";
+  }
+
+  if(type==="SCD2"){
+    rows=scd2;
+    cols=[...d.cols,"eff_start_date","eff_end_date","is_active"];
+    $("resultNote").innerHTML=
+      "<b>SCD2:</b> the old version remains, gets an end date, and the new version becomes active.";
+  }
+
+  if(type==="SCD3"){
+    rows=scd3.map(r=>{
+      const x=clone(r);
+      d.edit.forEach(c=>x["previous_"+c]=x.previous[c]??"");
+      delete x.previous;
+      return x;
+    });
+    cols=[...d.cols,...d.edit.map(c=>"previous_"+c)];
+    $("resultNote").innerHTML=
+      "<b>SCD3:</b> the current value is stored together with its immediately previous value.";
+  }
+
+  $("resultTable").innerHTML=`
+    <thead>
+      <tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>
+    </thead>
+    <tbody>
+      ${rows.map(r=>{
+        const active=r.is_active===true;
+        const selected=last && r[d.key]===last;
+        const cls=selected?"highlight":active?"active-row":r.is_active===false?"inactive":"";
+        return `<tr class="${cls}">
+          ${cols.map(c=>`<td>${r[c]??"NULL"}</td>`).join("")}
+        </tr>`;
+      }).join("")}
+    </tbody>`;
+}
+
+function renderTimeline(){
+  if(!history.length){
+    $("timeline").innerHTML=`
+      <div class="time-item current">
+        <div class="dot"></div>
+        <strong>Initial state</strong>
+        <span>No CDC changes yet</span>
+      </div>`;
+    return;
+  }
+
+  $("timeline").innerHTML=
+    `<div class="time-item">
+      <div class="dot"></div>
+      <strong>Initial state</strong>
+      <span>Original sample data</span>
+    </div>`+
+    history.map((e,i)=>`
+      <div class="time-item ${i===history.length-1?"current":""}">
+        <div class="dot"></div>
+        <strong>${fmt(e.time)}</strong>
+        <span>${e.op} ${e.id}${e.c?" · "+e.c:""}</span>
+      </div>`).join("");
+}
+
+function renderEvents(){
+  $("events").innerHTML=history.length
+    ? history.map(e=>`
+      <div class="event-chip">
+        <b>${e.op}</b> ${e.id}
+        ${e.c?` · ${e.c}`:""}
+        ${e.old!==null && e.old!==undefined?` · ${e.old} → ${e.value}`:""}
+        · ${fmt(e.time)}
+      </div>`).join("")
+    : `<span class="small">No CDC events yet. Apply your first change.</span>`;
+}
+
+function renderAll(){
+  previewEvent();
+  renderResult();
+  renderTimeline();
+  renderEvents();
+}
+
+$("sampleDataset").addEventListener("change",function(){
+  $("dataset").value=this.value;
+  loadDataset();
+});
+
+$("dataset").addEventListener("change",loadDataset);
+
+$("row").addEventListener("change",function(){
+  setSuggestedValue();
+  previewEvent();
+});
+
+$("column").addEventListener("change",function(){
+  setSuggestedValue();
+  previewEvent();
+});
+
+$("operation").addEventListener("change",previewEvent);
+$("newValue").addEventListener("input",previewEvent);
+$("eventTime").addEventListener("change",previewEvent);
+$("strategy").addEventListenear("change",renderResult);
+
+loadDataset();
+</script>
+</body>
+</html>
