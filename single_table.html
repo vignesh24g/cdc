@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CDC Visual Lab · Single Table</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f8fb;color:#18202c;font:14px system-ui,Segoe UI,sans-serif}
+body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:0}
+body:before{width:310px;height:310px;left:-70px;top:70px;opacity:.18;
+background:repeating-radial-gradient(circle at 50% 50%,transparent 0 30px,#8d96a6 31px 32px,transparent 33px 48px);
+clip-path:polygon(0 0,100% 0,100% 100%,0 100%);border-radius:50%}
+body:after{width:330px;height:330px;right:-85px;bottom:30px;opacity:.16;
+background:repeating-radial-gradient(circle at 50% 50%,transparent 0 31px,#8d96a6 32px 33px,transparent 34px 50px);
+border-radius:50%}
+main,.header{position:relative;z-index:1}
+header{padding:18px 28px;background:linear-gradient(120deg,#ffffff,#fff7f8,#f4f8ff);border-bottom:1px solid #d9dee7}
+.web{position:fixed;width:180px;height:180px;border-radius:50%;pointer-events:none;opacity:.12;z-index:0;background:repeating-radial-gradient(circle at center,transparent 0 18px,#7b8494 19px 20px,transparent 21px 35px)}
+.web:after{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg,transparent 0 14deg,#7b8494 15deg 16deg,transparent 17deg 45deg)}
+.web1{left:8px;top:145px}.web2{right:10px;top:18px;width:220px;height:220px}
+.brand{max-width:1450px;margin:auto;display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#d7192c;border:2px solid #ff6571;font-size:11px;font-weight:900;letter-spacing:.04em}.brand h1{margin:0;font-size:19px}.brand p{margin:3px 0;color:#667085;font-size:11px}
+main{max-width:1450px;margin:auto;padding:24px}.hero h2{margin:0 0 5px;font-size:29px}.hero p{margin:0 0 18px;color:#667085}
+.card{background:#ffffff;border:1px solid #dce1e8;border-radius:15px;box-shadow:0 15px 38px #0007}.sample{padding:16px;margin-bottom:12px;border-top:2px solid #e21b2d}.samplehead,.resulthead{display:flex;justify-content:space-between;align-items:end;gap:15px}.samplehead h3,.result h3{margin:0;font-size:15px}.samplehead p,.resulthead p{margin:4px 0 12px;color:#667085;font-size:10px}.picker{width:200px}.picker label,.field label{display:block;color:#667085;text-transform:uppercase;font-size:9px;font-weight:800;margin-bottom:5px}select,input{width:100%;padding:9px;border:1px solid #dce1e8;border-radius:9px;background:#ffffff;color:#18202c}.grid{display:grid;grid-template-columns:275px 1fr 1.3fr;gap:12px}.controls,.event,.result{padding:16px}.title{display:flex;justify-content:space-between;margin-bottom:14px}.title h3{margin:0;font-size:14px}.step{background:#e21b2d;border-radius:6px;padding:5px 8px;font-weight:900;font-size:10px}.field{margin-bottom:12px}.btn{width:100%;padding:10px;border-radius:9px;font-weight:900;border:1px solid #dce1e8;background:#ffffff;color:#18202c;margin-top:7px}.primary{background:#d7192c;border-color:#ff4353}.small{font-size:10px;color:#667085;line-height:1.5;margin-top:10px}.table{overflow:auto;border:1px solid #dce1e8;border-radius:10px}.table table{width:100%;border-collapse:collapse;min-width:500px}.table th,.table td{padding:9px;border-bottom:1px solid #293449;text-align:left;font-size:10px;white-space:nowrap}.table th{background:#090f1b;color:#667085;text-transform:uppercase;font-size:9px}.flow{border:1px solid #dce1e8;border-radius:11px;overflow:hidden}.flowgrid{display:grid;grid-template-columns:1fr 50px 1fr}.box{padding:18px}.before{background:#f5f7fa}.after{background:#effaf2}.arrow{display:grid;place-items:center;border-left:1px solid #293449;border-right:1px solid #293449;color:#43d5ff;font-size:23px}.label{font-size:9px;color:#667085;text-transform:uppercase}.value{font-size:20px;font-weight:900;margin-top:6px}.sub{font-size:10px;color:#667085;margin-top:3px}.meta{text-align:center;padding:11px;border-top:1px solid #293449;font-size:11px}.meta span{display:block;color:#667085;font-size:10px;margin-top:3px}.explain,.note{margin-top:10px;padding:10px;border-radius:9px;background:#f1f6ff;color:#315b93;font-size:10px;line-height:1.5}.timeline,.log{margin-top:12px;padding:14px}.timeline h3,.log h3{font-size:13px;margin:0 0 10px}.track{display:flex;overflow:auto}.item{min-width:145px;position:relative}.item:after{content:"";position:absolute;top:8px;left:17px;right:0;height:2px;background:#303b4e}.dot{width:17px;height:17px;border-radius:50%;background:#4b5565;border:4px solid #121a2a;position:relative;z-index:2}.item.current .dot{background:#e21b2d;box-shadow:0 0 12px #e21b2d}.item strong{display:block;font-size:10px;margin-top:7px}.item span{font-size:9px;color:#667085}.result{grid-column:3}.resulthead{align-items:start}.strategy{width:155px}.active{background:#effaf2}.highlight{background:#C07A80!important;box-shadow:inset 3px 0 #e21b2d}.inactive{color:#69768b}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{padding:7px 9px;border:1px solid #dce1e8;border-radius:8px;background:#ffffff;font-size:9px}.chip b{color:#ff6471}
+@media(max-width:1150px){.grid{grid-template-columns:250px 1fr}.result{grid-column:1/-1}}@media(max-width:750px){.grid{grid-template-columns:1fr}.result{grid-column:auto}.samplehead,.resulthead{display:block}.picker,.strategy{width:100%;margin-top:10px}.flowgrid{grid-template-columns:1fr}.arrow{padding:8px;border:0;border-top:1px solid #293449;border-bottom:1px solid #293449}}
+</style></head><body>
+<div class="web web1"></div><div class="web web2"></div>
+<header><div class="brand"><div class="logo">CDC</div><div><h1>CDC Visual Lab</h1><p>Single-table Change Data Capture · SCD1 · SCD2 · SCD3</p></div></div></header>
+<main><section class="hero"><h2>Single-table CDC playground</h2><p>Change one value at a specific time and see exactly what CDC captures.</p></section>
+<section class="card sample"><div class="samplehead"><div><h3>Sample data</h3><p id="desc">Customer master data.</p></div><div class="picker"><label>Choose table</label><select id="dataset"><option value="customer">Customer</option><option value="employee">Employee</option><option value="student">Student</option></select></div></div><div class="table" id="sample"></div><div class="small">The CSV files are the initial source data. Selecting the same value again is <b>not</b> a CDC change.</div></section>
+<div class="grid">
+<aside class="card controls"><div class="title"><h3>1 · Create change</h3><span class="step">1</span></div>
+<div class="field"><label>Operation</label><select id="op"><option>UPDATE</option><option>INSERT</option><option>DELETE</option></select></div>
+<div class="field"><label>Row</label><select id="row"></select></div><div class="field"><label>Column</label><select id="col"></select></div>
+<div class="field" id="valueBox"><label>New value</label><input id="value"></div><div class="field"><label>Change date & time</label><input id="time" type="datetime-local"></div>
+<button class="btn primary" id="apply">Apply CDC Change</button><button class="btn" id="reset">Reset Table</button>
+<div class="small" id="dup"></div></aside>
+<section class="card event"><div class="title"><h3>2 · CDC event</h3><span class="step">2</span></div>
+<div class="flow"><div class="flowgrid"><div class="box before"><div class="label">Before</div><div class="value" id="before">—</div><div class="sub" id="beforeSub">—</div></div><div class="arrow">→</div><div class="box after"><div class="label">After</div><div class="value" id="after">—</div><div class="sub">incoming value</div></div></div><div class="meta"><b id="sentence">UPDATE</b><span id="when"></span></div></div>
+<div class="explain" id="explain"></div><div class="card timeline"><h3>Record timeline</h3><div class="track" id="timeline"></div></div><div class="card log"><h3>CDC event history</h3><div class="chips" id="log"></div></div></section>
+<section class="card result"><div class="resulthead"><div><h3 id="rt">3 · SCD Type 1 result</h3><p id="rd">Current state only.</p></div><select class="strategy" id="strategy"><option>SCD1</option><option>SCD2</option><option>SCD3</option></select></div><div class="table" id="result"></div><div class="note" id="note"></div></section>
+</div></main>
+<script>
+const D={
+customer:{key:"id",cols:["id","name","address","phone"],edit:["name","address","phone"],rows:[
+{id:"C001",name:"Arun Kumar",address:"Chennai",phone:"9876543210"},{id:"C002",name:"Priya Sharma",address:"Bangalore",phone:"9876543211"},{id:"C003",name:"Ravi Patel",address:"Mumbai",phone:"9876543212"}]},
+employee:{key:"id",cols:["id","name","department","salary"],edit:["name","department","salary"],rows:[
+{id:"E101",name:"Anita Rao",department:"Engineering",salary:"85000"},{id:"E102",name:"Vikram Shah",department:"Finance",salary:"72000"},{id:"E103",name:"Meera Iyer",department:"HR",salary:"68000"}]},
+student:{key:"id",cols:["id","name","subject","score"],edit:["name","subject","score"],rows:[
+{id:"S001",name:"Kiran",subject:"Math",score:"78"},{id:"S002",name:"Nisha",subject:"Physics",score:"84"},{id:"S003",name:"Rahul",subject:"Math",score:"69"}]}};
+let base=[],cur=[],s2=[],s3=[],events=[];
+const $=x=>document.getElementById(x),cp=x=>JSON.parse(JSON.stringify(x));
+const ex={address:"Hyderabad",phone:"9000000000",name:"New Name",department:"Analytics",salary:"92000",subject:"Physics",score:"91"};
+function now(){let d=new Date(),p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
+function fmt(x){let d=new Date(x);return d.toLocaleString([],{year:"numeric",month:"short",day:"2-digit",hour:"2-digit",minute:"2-digit"})}
+function data(){return D[$("dataset").value]}
+function selected(){return cur.find(x=>x[data().key]===$("row").value)}
+function reset(){
+ let d=data();base=cp(d.rows);cur=cp(d.rows);s2=cur.map(x=>({...cp(x),eff_start_date:"Initial",eff_end_date:null,is_active:true}));s3=cur.map(x=>({...cp(x),previous:{}}));events=[];
+ $("time").value=now();populate();draw(); 
+}
+function populate(){
+ let d=data();$("row").innerHTML=cur.map(x=>`<option>${x[d.key]}</option>`).join("");$("col").innerHTML=d.edit.map(x=>`<option>${x}</option>`).join("");
+ $("col").value={customer:"address",employee:"salary",student:"score"}[$("dataset").value];$("value").value=ex[$("col").value]||"";renderSample();
+}
+function renderSample(){
+ let k=$("dataset").value,d=D[k];$("desc").textContent=k==="customer"?"Customer master data — address and phone changes.":k==="employee"?"Employee data — department and salary changes.":"Student data — score and subject corrections.";
+ $("sample").innerHTML=`<table><thead><tr>${d.cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${d.rows.map(r=>`<tr>${d.cols.map(c=>`<td>${r[c]}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+function preview(){
+ let r=selected();if(!r)return;let op=$("op").value,c=$("col").value,v=$("value").value;
+ $("before").textContent=op==="INSERT"?"—":r[c]??"NULL";$("after").textContent=op==="DELETE"?"DELETED":v;$("beforeSub").textContent=`${r[data().key]} · ${c}`;
+ $("sentence").textContent=op==="UPDATE"?`UPDATE ${r[data().key]}.${c}`:op==="DELETE"?`DELETE ${r[data().key]}`:`INSERT ${r[data().key]}`;$("when").textContent=`Event time · ${fmt($("time").value)}`;
+ let same=op==="UPDATE"&&String(v)===String(r[c]);$("dup").innerHTML=same?`<b style="color:#d7192c">⚠ No change detected.</b> The incoming value is the same as the current value, so CDC should not capture this event.`:"CDC captures only real source changes.";
+ $("apply").disabled=false;$("apply").style.opacity="1";$("valueBox").style.display=op==="DELETE"?"none":"block";
+ $("explain").innerHTML=same?"<b>CDC rule:</b> identical values are ignored — no duplicate event, no new SCD version.":"<b>SCD1:</b> overwrite · <b>SCD2:</b> expire old version + add new version · <b>SCD3:</b> retain previous value.";
+}
+function apply(){
+ let r=selected(),d=data(),op=$("op").value,c=$("col").value,v=$("value").value,t=$("time").value||now(),id=r[d.key],old=r[c];
+ if(op==="UPDATE"&&String(old)===String(v)){
+ alert("No change detected. The incoming value is identical to the current value, so CDC will not create an event or duplicate SCD version.");
+ preview(); return;
+}
+ if(op==="UPDATE"){r[c]=v;let a=s2.find(x=>x[d.key]===id&&x.is_active);if(a){a.is_active=false;a.eff_end_date=t;let n=cp(a);n[c]=v;n.eff_start_date=t;n.eff_end_date=null;n.is_active=true;s2.push(n)}let s=s3.find(x=>x[d.key]===id);s.previous[c]=s[c];s[c]=v;events.push({op,id,c,old,v,t})}
+ if(op==="DELETE"){cur=cur.filter(x=>x[d.key]!==id);s2.filter(x=>x[d.key]===id&&x.is_active).forEach(x=>{x.is_active=false;x.eff_end_date=t});s3=s3.filter(x=>x[d.key]!==id);events.push({op,id,t})}
+ if(op==="INSERT"){let nid=prompt("New row ID:",id+"-NEW");if(!nid)return;if(cur.some(x=>x[d.key]===nid)){alert("That ID already exists.");return}let n=cp(r);n[d.key]=nid;n[c]=v;cur.push(n);s2.push({...cp(n),eff_start_date:t,eff_end_date:null,is_active:true});s3.push({...cp(n),previous:{}});events.push({op,id:nid,c,old:null,v,t})}
+ $("time").value=now();populate();draw();
+}
+function draw(){
+ preview();let d=data(),type=$("strategy").value,last=events.length?events.at(-1).id:null,rows,cols;
+ if(type==="SCD1"){rows=cur;cols=d.cols;$("rd").textContent="Current state only — old values are overwritten.";$("note").innerHTML="<b>SCD1:</b> no historical row is retained."}
+ if(type==="SCD2"){rows=s2;cols=[...d.cols,"eff_start_date","eff_end_date","is_active"];$("rd").textContent="Historical versions with effective dates.";$("note").innerHTML="<b>SCD2:</b> previous versions remain available for history."}
+ if(type==="SCD3"){rows=s3.map(x=>{let n=cp(x);d.edit.forEach(c=>n["previous_"+c]=n.previous[c]??"");delete n.previous;return n});cols=[...d.cols,...d.edit.map(c=>"previous_"+c)];$("rd").textContent="Current value plus immediately previous value.";$("note").innerHTML="<b>SCD3:</b> only the previous value is retained."}
+ $("rt").textContent=`3 · ${type==="SCD1"?"SCD Type 1":type==="SCD2"?"SCD Type 2":"SCD Type 3"} result`;
+ $("result").innerHTML=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr class="${last&&r[d.key]===last?"highlight":r.is_active===true?"active":""}">${cols.map(c=>`<td>${r[c]??"NULL"}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+ $("timeline").innerHTML=`<div class="item"><div class="dot"></div><strong>Initial state</strong><span>Source data</span></div>`+events.map((e,i)=>`<div class="item ${i===events.length-1?"current":""}"><div class="dot"></div><strong>${fmt(e.t)}</strong><span>${e.op} ${e.id}${e.c?" · "+e.c:""}</span></div>`).join("");
+ $("log").innerHTML=events.length?events.map(e=>`<div class="chip"><b>${e.op}</b> ${e.id}${e.c?" · "+e.c:""}${e.old!=null?` · ${e.old} → ${e.v}`:""} · ${fmt(e.t)}</div>`).join(""):`<span class="small">No CDC events yet.</span>`;
+}
+$("dataset").onchange=reset;$("reset").onclick=reset;$("apply").onclick=apply;$("strategy").onchange=draw;$("op").onchange=draw;
+$("row").onchange=()=>{ $("value").value=ex[$("col").value]||"";draw()};$("col").onchange=()=>{$("value").value=ex[$("col").value]||"";draw()};
+$("value").oninput=preview;$("time").onchange=preview;reset();
+</script></body></html>
